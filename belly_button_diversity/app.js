@@ -1,10 +1,5 @@
 d3.json("data/data.json").then((importedData) => {
     // console.log(importedData)}
-
-    // Call updatePlotly() when a change takes place to the DOM
-    d3.select("#selDataset").on("change", updatePlotly); 
-
-    
     let data = importedData;
 
     console.log(data);
@@ -14,8 +9,6 @@ d3.json("data/data.json").then((importedData) => {
 
     // add each name as an option value value
     let dropdownmenu = d3.select("#selDataset");
-    
-    // let dataset = dropdownMenu.property("value");
 
     names.forEach(function(name){
 
@@ -24,7 +17,11 @@ d3.json("data/data.json").then((importedData) => {
 
         // make the text value in the box equal the name
         value.text(name)
+
     });
+
+    // Call updatePlotly() when a change takes place to the DOM
+    d3.select("#selDataset").on("change", updatePlotly); 
 
     // function updateplotly that will run everytime the selection is changed in the dropdown
     function updatePlotly() {
@@ -40,43 +37,89 @@ d3.json("data/data.json").then((importedData) => {
         };
     
         // run the filter on the dataset
-        let filteredSamples = data.samples.filter(filterSamples);
-    
-        let sampleValues = filteredSamples.map( i => i.sample_values);
-        let otuIDs = filteredSamples.map(i => i.otu_ids)
-        let otuLabels = filteredSamples.map(i => i.otu_labels)
+        let filteredSamples = data.samples.filter(filterSamples)[0]
+
+        let sampleValues = filteredSamples.sample_values;
+        let otuIDs = filteredSamples.otu_ids;
+        let otuLabels = filteredSamples.otu_labels;
+
+        // console.log(sampleValues)
+        // console.log(otuIDs )
+        // console.log(otuLabels)
+
+        // bar & bubble chart variables
+
+        // this wil be the values for the bar chart
+        // this wil also be the y valyes and marker size for the bubble chart
+        let topTenValues = sampleValues.slice(0,10);
+        
+        // this will be the labels for the bar chart
+        // this will also be the x values and the marker colors for the bubble chart
+        let topTenOtuIDs = otuIDs.slice(0,10);
+        let OtuIDstrings = topTenOtuIDs.map(elem => `otu: ${elem}`);
+
+        // this will be the hovertext for the bar chart
+        // this will also be the text values for the bubble chart
+        let topTenLabels = otuLabels.slice(0,10);
+
+      
+        // console.log(topTenValues);
+        // console.log(OtuIDstrings);
+        // console.log(topTenLabels);
+
+        // console.log(`Id is ${dName}, Top 10 sample values are ${topTenValues}`);
+        // console.log(`Id is ${dName}, Top 10 sample values are ${topTenOtuIDs}`);
+        // console.log(`Id is ${dName}, Top 10 sample values are ${topTenLabels}`);
+        
+        let trace1 = {
+            x: topTenValues.reverse(),
+            y: OtuIDstrings.reverse(),
+            type: "bar",
+            orientation: "h"
+        };
+
+        let stuff = [trace1];
+
+        let layout = {
+            title: "Otu Sample values",
+            xaxis: { title: "Sample Values" },
+            yaxis: { title: "OTU IDs"}
+        };
+
+        Plotly.newPlot("barh", stuff, layout);
+
+        var trace2 = {
+            x: otuIDs,
+            y: sampleValues,
+            mode: 'markers',
+            marker: {
+              size: sampleValues
+            }
+          };
+          
+          let bubble1 = [trace2];
+          
+          var layout2 = {
+            title: 'Sample Values vs OTU IDs',
+            showlegend: false,
+            xaxis: { title: "OTU IDs" },
+            yaxis: { title: "Sample Values"}
+         
+          };
+          
+          Plotly.newPlot('bubble', bubble1, layout2);
+
+        let metadata = data.metadata.filter(filterSamples)[0]
+
+        let metadatahtml = d3.select("#sample-metadata");
+
+        
+        console.log(metadata);
 
 
-        let topTenValues = sampleValues.map(i => i.slice(0,10));
-        let topTenOtuIDs = otuIDs.map(i => i.slice(0,10));
-        let topTenLabels = otuLabels .map(i => i.slice(0,10));
-
-        // console.log(topTen);
-
-        console.log(`Id is ${dName}, Top 10 sample values are ${topTenValues}`);
-        console.log(`Id is ${dName}, Top 10 sample values are ${topTenOtuIDs}`);
-        console.log(`Id is ${dName}, Top 10 sample values are ${topTenLabels}`);
+       
 
     };
-
-
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 });
 
