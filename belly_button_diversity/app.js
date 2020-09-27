@@ -94,6 +94,20 @@ d3.json("data/data.json").then((importedData) => {
 
      let metadatahtml = d3.select("#sample-metadata");
 
+     let tbody=metadatahtml.append("tbody");
+
+     let row = tbody.append("tr");
+
+    row.append("td").append("td").text(`ID: ${metadata.id}`)
+     .append("tr").append("td").text(`Ethnicity: ${metadata.ethnicity}`)
+     .append("tr").append("td").text(`Gender: ${metadata.gender}`)
+     .append("tr").append("td").text(`Age: ${metadata.age}`)
+     .append("tr").append("td").text(`Location: ${metadata.location}`)
+     .append("tr").append("td").text(`Bbtype: ${metadata.bbtype}`)
+     .append("tr").append("td").text(`Wfreq:${metadata.wfreq}`)
+
+
+
      
      console.log(metadata);
 
@@ -105,6 +119,9 @@ d3.json("data/data.json").then((importedData) => {
 
     // function updateplotly that will run everytime the selection is changed in the dropdown
     function updatePlotly() {
+
+        let rows = d3.selectAll("tbody tr");
+        rows.remove();
 
         // select the value of the property in the dropdown
         let dName = dropdownmenu.property("value");
@@ -179,6 +196,18 @@ d3.json("data/data.json").then((importedData) => {
         let metadata = data.metadata.filter(filterSamples)[0]
 
         let metadatahtml = d3.select("#sample-metadata");
+
+        let tbody=metadatahtml.append("tbody");
+
+        let row = tbody.append("tr");
+   
+       row.append("td").append("td").text(`ID: ${metadata.id}`)
+        .append("tr").append("td").text(`Ethnicity: ${metadata.ethnicity}`)
+        .append("tr").append("td").text(`Gender: ${metadata.gender}`)
+        .append("tr").append("td").text(`Age: ${metadata.age}`)
+        .append("tr").append("td").text(`Location: ${metadata.location}`)
+        .append("tr").append("td").text(`Bbtype: ${metadata.bbtype}`)
+        .append("tr").append("td").text(`Wfreq:${metadata.wfreq}`)
 
         
         console.log(metadata);
